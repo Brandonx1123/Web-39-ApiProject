@@ -1,4 +1,5 @@
 require("dotenv").config();
+const path = require("path");
 
 console.log("brandon rules");
 
@@ -7,6 +8,7 @@ const express = require("express");
 const server = express();
 
 server.use(express.json());
+server.use(express.static(path.join(__dirname, "client/build")));
 
 // server.use(cors());
 
@@ -18,8 +20,12 @@ if (process.env.NODE_ENV === "development") {
   server.use(cors());
 }
 
-server.use("*", (req, res) => {
-  res.send("<h1>Brandons API </h1>");
+server.get("/api/hello", (req, res) => {
+  res.json({ message: "hello" });
+});
+
+server.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client/build", "index.html"));
 });
 
 const PORT = process.env.PORT || 4000;
